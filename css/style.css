@@ -1,0 +1,304 @@
+/* ============================================================
+   style.css
+   Stylesheet global — digunakan oleh seluruh halaman
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   RESET & BASE
+   ------------------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Palet warna utama */
+  --color-primary:       #2563eb;   /* Biru utama */
+  --color-primary-dark:  #1d4ed8;   /* Biru gelap (hover) */
+  --color-primary-light: #eff6ff;   /* Biru sangat muda (background aksen) */
+
+  /* Warna status tiket */
+  --color-open:          #f59e0b;   /* Kuning — Open */
+  --color-inprogress:    #3b82f6;   /* Biru — In Progress */
+  --color-resolved:      #10b981;   /* Hijau — Resolved */
+  --color-closed:        #6b7280;   /* Abu — Closed */
+
+  /* Warna prioritas */
+  --color-high:          #ef4444;   /* Merah — High */
+  --color-medium:        #f59e0b;   /* Kuning — Medium */
+  --color-low:           #10b981;   /* Hijau — Low */
+
+  /* Warna teks */
+  --color-text:          #1f2937;
+  --color-text-muted:    #6b7280;
+  --color-text-light:    #9ca3af;
+
+  /* Warna latar */
+  --color-bg:            #f3f4f6;
+  --color-surface:       #ffffff;
+  --color-border:        #e5e7eb;
+
+  /* Warna error */
+  --color-error:         #ef4444;
+  --color-error-bg:      #fef2f2;
+  --color-error-border:  #fecaca;
+
+  /* Warna sukses */
+  --color-success:       #10b981;
+  --color-success-bg:    #ecfdf5;
+
+  /* Tipografi */
+  --font-family:         'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-size-base:      14px;
+  --font-size-sm:        12px;
+  --font-size-lg:        16px;
+  --font-size-xl:        20px;
+  --font-size-2xl:       24px;
+
+  /* Ukuran & jarak */
+  --border-radius:       8px;
+  --border-radius-sm:    4px;
+  --border-radius-lg:    12px;
+  --shadow:              0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md:           0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg:           0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------------------------------------
+   HALAMAN LOGIN
+   ------------------------------------------------------------ */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+  padding: 24px;
+}
+
+/* Card utama login */
+.login-card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 36px;
+}
+
+/* Header dalam card login */
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background-color: var(--color-primary-light);
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.login-logo svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary);
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.login-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Form group (label + input) */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--border-radius);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-light);
+}
+
+/* Pesan error */
+.error-message {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error);
+  border-radius: var(--border-radius);
+  padding: 10px 14px;
+  font-size: var(--font-size-sm);
+  margin-bottom: 20px;
+}
+
+.error-message.visible {
+  display: flex;
+}
+
+/* Tombol Login */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+/* Info akun demo di bawah card */
+.login-demo-info {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: var(--color-primary-light);
+  border-radius: var(--border-radius);
+  border: 1px solid #bfdbfe;
+}
+
+.login-demo-info p {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.login-demo-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.login-demo-info ul li {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  padding: 2px 0;
+}
+
+.login-demo-info ul li span {
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Divider di antara form dan info demo */
+.login-divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 24px 0 0;
+}
+
+/* ------------------------------------------------------------
+   UTILITY CLASSES
+   Kelas-kelas ini dapat digunakan di seluruh halaman lain
+   ------------------------------------------------------------ */
+
+/* Teks */
+.text-muted   { color: var(--color-text-muted); }
+.text-small   { font-size: var(--font-size-sm); }
+.text-center  { text-align: center; }
+.font-bold    { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+
+/* Spacing */
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+
+/* Badge status tiket */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.badge-open        { background-color: #fef3c7; color: #92400e; }
+.badge-inprogress  { background-color: #dbeafe; color: #1e40af; }
+.badge-resolved    { background-color: #d1fae5; color: #065f46; }
+.badge-closed      { background-color: #f3f4f6; color: #374151; }
+
+/* Badge prioritas */
+.badge-high   { background-color: #fee2e2; color: #991b1b; }
+.badge-medium { background-color: #fef3c7; color: #92400e; }
+.badge-low    { background-color: #d1fae5; color: #065f46; }

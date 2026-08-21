@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelola Tiket — IT Helpdesk & Ticketing System</title>
+  <!-- Urutan CSS: style.css → dashboard.css → admin.css → manage-tickets.css -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/manage-tickets.css" />
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!-- ========================================================
+         SIDEBAR ADMIN
+         Identik dengan admin-dashboard.html.
+         Nav item "Kelola Tiket" diberi class "active".
+         ======================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Menu admin">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">IT Helpdesk</span>
+          <span class="sidebar-brand-sub">Admin Panel</span>
+        </div>
+      </div>
+
+      <!-- Info admin — diisi oleh renderManageSidebar() -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">Memuat...</div>
+        <span class="sidebar-user-role" id="sidebar-user-role">Admin</span>
+      </div>
+
+      <!-- Navigasi Admin -->
+      <nav class="sidebar-nav" aria-label="Menu admin">
+        <div class="nav-label">Menu</div>
+
+        <a href="admin-dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3"  y="3"  width="7" height="7" rx="1" />
+            <rect x="14" y="3"  width="7" height="7" rx="1" />
+            <rect x="3"  y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Kelola Tiket — aktif -->
+        <a href="manage-tickets.html" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+          </svg>
+          Kelola Tiket
+        </a>
+
+        <a href="manage-users.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Pengguna
+        </a>
+      </nav>
+
+      <!-- Logout -->
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn-logout" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
+      </div>
+
+    </aside><!-- /.sidebar -->
+
+
+    <!-- ========================================================
+         MAIN CONTENT
+         ======================================================== -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">Kelola Tiket</div>
+          <div class="topbar-subtitle">Lihat, filter, dan perbarui status semua tiket</div>
+        </div>
+      </div>
+
+      <!-- Konten halaman -->
+      <div class="page-content">
+
+        <!-- ====================================================
+             TOOLBAR FILTER
+             Tiga dropdown (Status, Prioritas, Kategori) +
+             tombol Reset + teks jumlah hasil
+             ==================================================== -->
+        <div class="manage-toolbar" role="search" aria-label="Filter tiket">
+
+          <!-- Filter Status -->
+          <div class="manage-toolbar-group">
+            <span class="filter-label">Status:</span>
+            <select id="filter-status" class="filter-select" aria-label="Filter berdasarkan status">
+              <option value="all">Semua Status</option>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
+          <!-- Filter Prioritas -->
+          <div class="manage-toolbar-group">
+            <span class="filter-label">Prioritas:</span>
+            <select id="filter-priority" class="filter-select" aria-label="Filter berdasarkan prioritas">
+              <option value="all">Semua Prioritas</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider" aria-hidden="true"></div>
+
+          <!-- Filter Kategori -->
+          <div class="manage-toolbar-group">
+            <span class="filter-label">Kategori:</span>
+            <select id="filter-category" class="filter-select" aria-label="Filter berdasarkan kategori">
+              <option value="all">Semua Kategori</option>
+              <option value="Hardware">Hardware</option>
+              <option value="Software">Software</option>
+              <option value="Network">Network</option>
+              <option value="Account">Account</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Tombol Reset Filter -->
+          <button id="btn-reset" class="btn-reset" type="button" title="Reset semua filter">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 .49-3.51" />
+            </svg>
+            Reset Filter
+          </button>
+
+          <!-- Teks jumlah hasil — diisi oleh updateCount() -->
+          <span class="ticket-count-text" role="status" aria-live="polite">
+            Menampilkan <strong id="ticket-count">0</strong> tiket
+          </span>
+
+        </div><!-- /.manage-toolbar -->
+
+
+        <!-- ====================================================
+             TABEL TIKET
+             Ditampilkan jika ada tiket yang cocok dengan filter.
+             ID "manage-table-wrap" dikontrol oleh renderManageTable()
+             ==================================================== -->
+        <div id="manage-table-wrap" class="manage-table-wrapper">
+          <table class="manage-table" aria-label="Daftar semua tiket">
+            <thead>
+              <tr>
+                <th class="mcol-id">ID</th>
+                <th class="mcol-title">Judul</th>
+                <th class="mcol-user">Pengguna</th>
+                <th class="mcol-category">Kategori</th>
+                <th class="mcol-priority">Prioritas</th>
+                <th class="mcol-status">Status</th>
+                <th class="mcol-date">Tgl. Dibuat</th>
+                <th class="mcol-update">Update Status</th>
+                <th class="mcol-action">Aksi</th>
+              </tr>
+            </thead>
+            <!-- Baris diisi oleh renderManageTable() di manage-tickets.js -->
+            <tbody id="manage-tbody"></tbody>
+          </table>
+        </div><!-- /#manage-table-wrap -->
+
+
+        <!-- ====================================================
+             EMPTY STATE — filter aktif tapi tidak ada hasil
+             Ditampilkan oleh renderManageTable()
+             ==================================================== -->
+        <div id="empty-filter" class="empty-filter-state" role="status" aria-live="polite">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <p>
+            Tidak ada tiket yang sesuai dengan filter yang dipilih.<br>
+            Coba ubah atau reset filter.
+          </p>
+          <!-- Tombol reset inline agar tidak perlu fungsi terpisah -->
+          <button
+            type="button"
+            class="btn-reset"
+            onclick="document.getElementById('filter-status').value='all';
+                     document.getElementById('filter-priority').value='all';
+                     document.getElementById('filter-category').value='all';
+                     refreshTable();"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 .49-3.51" />
+            </svg>
+            Tampilkan Semua Tiket
+          </button>
+        </div><!-- /#empty-filter -->
+
+
+        <!-- ====================================================
+             EMPTY STATE — belum ada tiket sama sekali
+             Ditampilkan oleh renderManageTable() jika total = 0
+             ==================================================== -->
+        <div id="empty-all" class="empty-state" style="display:none;" role="status">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+          </svg>
+          <p class="empty-state-title">Belum Ada Tiket</p>
+          <p class="empty-state-desc">
+            Belum ada tiket yang masuk ke sistem.
+            Tiket akan muncul di sini setelah pengguna mengirimkan laporan.
+          </p>
+        </div><!-- /#empty-all -->
+
+      </div><!-- /.page-content -->
+    </main><!-- /.main-content -->
+
+  </div><!-- /.dashboard-layout -->
+
+
+  <!-- ============================================================
+       TOAST NOTIFICATION
+       Ditampilkan oleh showToast() di manage-tickets.js
+       setelah update status berhasil disimpan.
+       ============================================================ -->
+  <div id="toast-notification" class="toast" role="alert" aria-live="assertive">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+    <!-- Teks diisi oleh showToast() -->
+    <span id="toast-text"></span>
+  </div>
+
+
+  <!-- ============================================================
+       SCRIPT — urutan wajib: utils.js → auth.js → manage-tickets.js
+       ============================================================ -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/manage-tickets.js"></script>
+
+</body>
+</html>

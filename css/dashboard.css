@@ -1,0 +1,575 @@
+/* ============================================================
+   dashboard.css
+   Styling untuk semua halaman dashboard (User & Admin)
+   Menggunakan CSS variables yang sudah didefinisikan di style.css
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   LAYOUT UTAMA
+   Terdiri dari: sidebar (kiri) + main content (kanan)
+   ------------------------------------------------------------ */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ------------------------------------------------------------
+   SIDEBAR
+   ------------------------------------------------------------ */
+.sidebar {
+  width: 240px;
+  min-width: 240px;           /* Lebar tetap, tidak menyusut */
+  background-color: #1e293b;  /* Biru gelap/navy */
+  color: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  position: fixed;            /* Sidebar tetap di kiri saat scroll */
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+}
+
+/* Logo & nama aplikasi di atas sidebar */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #334155;
+}
+
+.sidebar-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: var(--color-primary);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.sidebar-brand-sub {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+/* Info user yang login */
+.sidebar-user {
+  padding: 16px 20px;
+  border-bottom: 1px solid #334155;
+}
+
+.sidebar-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: #0ea5e9;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sidebar-user-role.role-admin {
+  background-color: #8b5cf6; /* Ungu untuk Admin */
+}
+
+/* Daftar menu navigasi */
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.nav-label {
+  padding: 8px 20px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 0;
+  transition: background-color 0.15s, color 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background-color: #334155;
+  color: #f1f5f9;
+}
+
+/* Kelas aktif: halaman yang sedang dibuka */
+.nav-item.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.nav-item svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Tombol logout di bagian bawah sidebar */
+.sidebar-footer {
+  padding: 12px 0;
+  border-top: 1px solid #334155;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-family);
+  color: #f87171;           /* Merah muda untuk logout */
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-logout:hover {
+  background-color: #334155;
+  color: #fca5a5;
+}
+
+.btn-logout svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ------------------------------------------------------------
+   MAIN CONTENT
+   Area utama di sebelah kanan sidebar
+   ------------------------------------------------------------ */
+.main-content {
+  flex: 1;
+  margin-left: 240px;         /* Sama dengan lebar sidebar */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* Topbar: judul halaman di bagian atas konten */
+.topbar {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow);
+}
+
+.topbar-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.topbar-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: 1px;
+}
+
+/* Konten halaman (padding dalam main area) */
+.page-content {
+  padding: 28px;
+  flex: 1;
+}
+
+/* ------------------------------------------------------------
+   SECTION HEADER
+   Judul dan deskripsi di dalam setiap section
+   ------------------------------------------------------------ */
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.section-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------------------------------------
+   STAT CARDS
+   Card ringkasan angka statistik tiket
+   ------------------------------------------------------------ */
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-left: 4px solid transparent;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Warna border kiri sesuai jenis statistik */
+.stat-card.total      { border-left-color: var(--color-primary); }
+.stat-card.open       { border-left-color: var(--color-open); }
+.stat-card.inprogress { border-left-color: var(--color-inprogress); }
+.stat-card.resolved   { border-left-color: var(--color-resolved); }
+.stat-card.closed     { border-left-color: var(--color-closed); }
+
+/* Ikon dalam stat card */
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stat-card.total      .stat-icon { background-color: #eff6ff; color: var(--color-primary); }
+.stat-card.open       .stat-icon { background-color: #fef3c7; color: #d97706; }
+.stat-card.inprogress .stat-icon { background-color: #dbeafe; color: #2563eb; }
+.stat-card.resolved   .stat-icon { background-color: #d1fae5; color: #059669; }
+.stat-card.closed     .stat-icon { background-color: #f3f4f6; color: #6b7280; }
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* ------------------------------------------------------------
+   EMPTY STATE
+   Tampilan saat data kosong
+   ------------------------------------------------------------ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.empty-state svg {
+  width: 56px;
+  height: 56px;
+  stroke: #d1d5db;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 16px;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.empty-state-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+/* Tombol CTA di bawah empty state */
+.empty-state .btn {
+  margin-top: 20px;
+  width: auto;
+  padding: 10px 24px;
+}
+
+/* ------------------------------------------------------------
+   WELCOME BANNER
+   Sambutan di bagian atas dashboard
+   ------------------------------------------------------------ */
+.welcome-banner {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.welcome-text h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.welcome-text p {
+  font-size: var(--font-size-sm);
+  color: #bfdbfe;
+}
+
+.welcome-banner .btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  font-family: var(--font-family);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.welcome-banner .btn-cta:hover {
+  background-color: #eff6ff;
+}
+
+.welcome-banner .btn-cta svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ------------------------------------------------------------
+   QUICK INFO CARD
+   Card informasi tambahan di bawah stat cards
+   ------------------------------------------------------------ */
+.info-card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.info-card-header svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--color-primary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.info-card-title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Daftar item di dalam info card */
+.info-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.info-list li::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------
+   BUTTON VARIANTS (tambahan untuk dashboard)
+   ------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-border);
+}
+
+.btn svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

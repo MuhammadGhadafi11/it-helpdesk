@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — IT Helpdesk & Ticketing System</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="login-page">
+
+  <!-- ============================================================
+       CARD LOGIN
+       ============================================================ -->
+  <div class="login-card">
+
+    <!-- Header: logo dan judul -->
+    <div class="login-header">
+      <div class="login-logo">
+        <!-- Ikon headset / support (SVG inline) -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3
+                   a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1
+                   a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+        </svg>
+      </div>
+      <h1 class="login-title">IT Helpdesk</h1>
+      <p class="login-subtitle">Ticketing System &mdash; Silakan login untuk melanjutkan</p>
+    </div>
+
+    <!-- Pesan error (tersembunyi secara default) -->
+    <div id="error-message" class="error-message" role="alert">
+      <!-- Ikon peringatan -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      <span id="error-text"></span>
+    </div>
+
+    <!-- Form Login -->
+    <form id="login-form" novalidate>
+
+      <!-- Username -->
+      <div class="form-group">
+        <label class="form-label" for="input-username">Username</label>
+        <input
+          id="input-username"
+          class="form-input"
+          type="text"
+          placeholder="Masukkan username"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="input-password">Password</label>
+        <input
+          id="input-password"
+          class="form-input"
+          type="password"
+          placeholder="Masukkan password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <!-- Tombol Login -->
+      <button type="submit" class="btn btn-primary">
+        <!-- Ikon login -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+          <polyline points="10 17 15 12 10 7" />
+          <line x1="15" y1="12" x2="3" y2="12" />
+        </svg>
+        Masuk
+      </button>
+
+    </form>
+
+    <!-- Divider -->
+    <hr class="login-divider" />
+    
+  </div><!-- /.login-card -->
+
+  <!-- ============================================================
+       SCRIPT
+       utils.js dimuat lebih dulu karena auth.js bergantung padanya
+       ============================================================ -->
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+
+</body>
+</html>

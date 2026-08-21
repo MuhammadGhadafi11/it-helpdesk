@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — IT Helpdesk & Ticketing System</title>
+  <!-- style.css dimuat lebih dulu karena dashboard.css bergantung pada variabelnya -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       LAYOUT UTAMA: Sidebar (kiri) + Main Content (kanan)
+       ============================================================ -->
+  <div class="dashboard-layout">
+
+    <!-- ========================================================
+         SIDEBAR
+         ======================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Menu utama">
+
+      <!-- Brand / Nama Aplikasi -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon" aria-hidden="true">
+          <!-- Ikon headset -->
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">IT Helpdesk</span>
+          <span class="sidebar-brand-sub">Ticketing System</span>
+        </div>
+      </div>
+
+      <!-- Info User yang Sedang Login -->
+      <!-- Diisi oleh dashboard.js melalui renderUserInfo() -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">Memuat...</div>
+        <span class="sidebar-user-role" id="sidebar-user-role">User</span>
+      </div>
+
+      <!-- Menu Navigasi -->
+      <nav class="sidebar-nav" aria-label="Navigasi user">
+        <div class="nav-label">Menu</div>
+
+        <!-- Dashboard — halaman aktif saat ini -->
+        <a href="user-dashboard.html" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Buat Tiket -->
+        <a href="create-ticket.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8"  y1="12" x2="16" y2="12" />
+          </svg>
+          Buat Tiket
+        </a>
+
+        <!-- Tiket Saya -->
+        <a href="my-tickets.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9" y1="13" x2="15" y2="13" />
+            <line x1="9" y1="17" x2="13" y2="17" />
+          </svg>
+          Tiket Saya
+        </a>
+      </nav>
+
+      <!-- Tombol Logout -->
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn-logout" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
+      </div>
+
+    </aside><!-- /.sidebar -->
+
+
+    <!-- ========================================================
+         MAIN CONTENT
+         ======================================================== -->
+    <main class="main-content">
+
+      <!-- Topbar: judul halaman -->
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-subtitle">Selamat datang di IT Helpdesk</div>
+        </div>
+      </div>
+
+      <!-- Konten Halaman -->
+      <div class="page-content">
+
+        <!-- Welcome Banner -->
+        <!-- Nama user diisi oleh dashboard.js melalui renderUserInfo() -->
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h2>Halo, <span id="welcome-name">...</span>!</h2>
+            <p>Ada masalah IT yang perlu dilaporkan? Buat tiket sekarang.</p>
+          </div>
+          <a href="create-ticket.html" class="btn-cta">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8"  y1="12" x2="16" y2="12" />
+            </svg>
+            Buat Tiket
+          </a>
+        </div>
+
+        <!-- ======================================================
+             STAT CARDS
+             Ditampilkan hanya jika user sudah memiliki tiket.
+             Disembunyikan oleh dashboard.js jika belum ada tiket.
+             ====================================================== -->
+        <div id="stats-section">
+
+          <div class="section-header">
+            <h3 class="section-title">Ringkasan Tiket Saya</h3>
+            <p class="section-desc">Statistik tiket yang pernah Anda buat</p>
+          </div>
+
+          <div class="stat-cards">
+
+            <!-- Total Tiket -->
+            <div class="stat-card total">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <!-- Angka diisi oleh dashboard.js melalui renderStatCards() -->
+                <span class="stat-number" id="stat-total">0</span>
+                <span class="stat-label">Total Tiket</span>
+              </div>
+            </div>
+
+            <!-- Open -->
+            <div class="stat-card open">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number" id="stat-open">0</span>
+                <span class="stat-label">Open</span>
+              </div>
+            </div>
+
+            <!-- In Progress -->
+            <div class="stat-card inprogress">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="23 4 23 10 17 10" />
+                  <polyline points="1 20 1 14 7 14" />
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number" id="stat-inprogress">0</span>
+                <span class="stat-label">In Progress</span>
+              </div>
+            </div>
+
+            <!-- Resolved -->
+            <div class="stat-card resolved">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number" id="stat-resolved">0</span>
+                <span class="stat-label">Resolved</span>
+              </div>
+            </div>
+
+          </div><!-- /.stat-cards -->
+
+          <!-- Info cara kerja status tiket -->
+          <div class="info-card">
+            <div class="info-card-header">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8"  x2="12.01" y2="8" />
+              </svg>
+              <span class="info-card-title">Alur Status Tiket</span>
+            </div>
+            <ul class="info-list">
+              <li><strong>Open</strong> — Tiket baru masuk, belum diproses oleh IT Support.</li>
+              <li><strong>In Progress</strong> — IT Support sedang menangani masalah Anda.</li>
+              <li><strong>Resolved</strong> — Masalah telah diselesaikan oleh IT Support.</li>
+              <li><strong>Closed</strong> — Tiket telah ditutup secara resmi.</li>
+            </ul>
+          </div>
+
+        </div><!-- /#stats-section -->
+
+
+        <!-- ======================================================
+             EMPTY STATE
+             Ditampilkan jika user belum memiliki tiket sama sekali.
+             Disembunyikan oleh dashboard.js jika sudah ada tiket.
+             ====================================================== -->
+        <div id="empty-section" class="empty-state" style="display: none;">
+          <!-- Ikon tiket kosong -->
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+            <line x1="12" y1="9"  x2="12" y2="9" />
+          </svg>
+          <p class="empty-state-title">Belum Ada Tiket</p>
+          <p class="empty-state-desc">
+            Anda belum memiliki tiket. Jika ada masalah atau permintaan IT,
+            silakan buat tiket baru agar segera ditangani oleh tim IT Support.
+          </p>
+          <a href="create-ticket.html" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8"  x2="12" y2="16" />
+              <line x1="8"  y1="12" x2="16" y2="12" />
+            </svg>
+            Buat Tiket Sekarang
+          </a>
+        </div><!-- /#empty-section -->
+
+      </div><!-- /.page-content -->
+    </main><!-- /.main-content -->
+
+  </div><!-- /.dashboard-layout -->
+
+  <!-- ============================================================
+       SCRIPT
+       utils.js → auth.js → dashboard.js (urutan wajib dipertahankan)
+       ============================================================ -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/dashboard.js"></script>
+
+</body>
+</html>

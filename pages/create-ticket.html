@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buat Tiket — IT Helpdesk & Ticketing System</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+
+  <style>
+    /* --------------------------------------------------------
+       Styling khusus halaman Create Ticket
+       Ditulis di sini agar tidak mencemari dashboard.css
+       yang dipakai bersama oleh semua halaman
+       -------------------------------------------------------- */
+
+    /* Wrapper form agar tidak terlalu lebar di layar besar */
+    .form-card {
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+      padding: 32px 36px;
+      max-width: 680px;
+    }
+
+    /* Judul di dalam card form */
+    .form-card-title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 4px;
+    }
+
+    .form-card-desc {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Dua kolom dalam satu baris (Kategori & Prioritas) */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Select / dropdown */
+    .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: var(--font-size-base);
+      font-family: var(--font-family);
+      color: var(--color-text);
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius);
+      outline: none;
+      appearance: none;                      /* Hilangkan panah default browser */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;                   /* Beri ruang untuk ikon panah */
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    /* Textarea untuk deskripsi */
+    .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: var(--font-size-base);
+      font-family: var(--font-family);
+      color: var(--color-text);
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius);
+      outline: none;
+      resize: vertical;                      /* Hanya bisa diubah tingginya */
+      min-height: 120px;
+      line-height: 1.6;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .form-textarea::placeholder {
+      color: var(--color-text-light);
+    }
+
+    /* State error pada input / select / textarea */
+    .input-error {
+      border-color: var(--color-error) !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+    }
+
+    /* Pesan error per field */
+    .field-error {
+      display: none;            /* Tersembunyi secara default */
+      font-size: var(--font-size-sm);
+      color: var(--color-error);
+      margin-top: 5px;
+    }
+
+    /* Banner sukses setelah tiket berhasil dibuat */
+    .success-message {
+      display: none;            /* Ditampilkan oleh ticket.js setelah simpan */
+      align-items: center;
+      gap: 10px;
+      background-color: var(--color-success-bg);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      border-radius: var(--border-radius);
+      padding: 14px 16px;
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .success-message svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Area tombol di bawah form */
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* Tombol submit utama — lebar otomatis, bukan full width */
+    .btn-submit {
+      padding: 11px 28px;
+      font-size: var(--font-size-base);
+    }
+
+    /* Tombol batal / kembali */
+    .btn-cancel {
+      padding: 11px 20px;
+      font-size: var(--font-size-base);
+    }
+
+    /* Panduan pengisian di bawah form card */
+    .form-guide {
+      margin-top: 20px;
+      max-width: 680px;
+    }
+
+    /* Keterangan karakter di pojok kanan label judul */
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .char-count {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+
+    .char-count.over-limit {
+      color: var(--color-error);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       LAYOUT UTAMA: Sidebar (kiri) + Main Content (kanan)
+       ============================================================ -->
+  <div class="dashboard-layout">
+
+    <!-- ========================================================
+         SIDEBAR
+         Struktur identik dengan user-dashboard.html.
+         Nav item "Buat Tiket" diberi class "active".
+         ======================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Menu utama">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">IT Helpdesk</span>
+          <span class="sidebar-brand-sub">Ticketing System</span>
+        </div>
+      </div>
+
+      <!-- Info User — diisi oleh ticket.js -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">Memuat...</div>
+        <span class="sidebar-user-role" id="sidebar-user-role">User</span>
+      </div>
+
+      <!-- Navigasi -->
+      <nav class="sidebar-nav" aria-label="Navigasi user">
+        <div class="nav-label">Menu</div>
+
+        <a href="user-dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Buat Tiket — halaman aktif saat ini -->
+        <a href="create-ticket.html" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8"  x2="12" y2="16" />
+            <line x1="8"  y1="12" x2="16" y2="12" />
+          </svg>
+          Buat Tiket
+        </a>
+
+        <a href="my-tickets.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9" y1="13" x2="15" y2="13" />
+            <line x1="9" y1="17" x2="13" y2="17" />
+          </svg>
+          Tiket Saya
+        </a>
+      </nav>
+
+      <!-- Logout -->
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn-logout" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
+      </div>
+
+    </aside><!-- /.sidebar -->
+
+
+    <!-- ========================================================
+         MAIN CONTENT
+         ======================================================== -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">Buat Tiket Baru</div>
+          <div class="topbar-subtitle">Laporkan masalah atau permintaan bantuan IT Anda</div>
+        </div>
+      </div>
+
+      <!-- Konten Halaman -->
+      <div class="page-content">
+
+        <!-- ====================================================
+             BANNER SUKSES
+             Tersembunyi secara default.
+             Ditampilkan oleh showSuccessNotification() di ticket.js
+             ==================================================== -->
+        <div id="success-message" class="success-message" role="alert">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <span id="success-text"></span>
+        </div>
+
+        <!-- ====================================================
+             FORM CARD
+             ==================================================== -->
+        <div class="form-card">
+
+          <h2 class="form-card-title">Form Laporan Masalah IT</h2>
+          <p class="form-card-desc">
+            Isi semua field di bawah ini dengan lengkap dan jelas agar tim IT Support
+            dapat memahami dan menangani masalah Anda dengan cepat.
+          </p>
+
+          <form id="ticket-form" novalidate>
+
+            <!-- ------------------------------------------------
+                 JUDUL MASALAH
+                 ------------------------------------------------ -->
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label" for="field-title">
+                  Judul Masalah
+                  <span style="color: var(--color-error);" aria-hidden="true"> *</span>
+                </label>
+                <!-- Penghitung karakter — diperbarui oleh JS saat mengetik -->
+                <span class="char-count" id="title-char-count">0 / 100</span>
+              </div>
+              <input
+                id="field-title"
+                class="form-input"
+                type="text"
+                placeholder="Contoh: Laptop tidak bisa terhubung ke WiFi kantor"
+                maxlength="100"
+                autocomplete="off"
+                aria-describedby="error-field-title"
+                aria-required="true"
+              />
+              <!-- Pesan error — ditampilkan oleh showFieldError() di ticket.js -->
+              <span id="error-field-title" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- ------------------------------------------------
+                 DESKRIPSI MASALAH
+                 ------------------------------------------------ -->
+            <div class="form-group">
+              <label class="form-label" for="field-description">
+                Deskripsi Masalah
+                <span style="color: var(--color-error);" aria-hidden="true"> *</span>
+              </label>
+              <textarea
+                id="field-description"
+                class="form-textarea"
+                placeholder="Jelaskan masalah secara detail: kapan terjadi, apa yang sudah dicoba, perangkat apa yang terdampak, dsb."
+                maxlength="1000"
+                aria-describedby="error-field-description"
+                aria-required="true"
+              ></textarea>
+              <span id="error-field-description" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- ------------------------------------------------
+                 KATEGORI & PRIORITAS (dua kolom)
+                 ------------------------------------------------ -->
+            <div class="form-row">
+
+              <!-- Kategori -->
+              <div class="form-group">
+                <label class="form-label" for="field-category">
+                  Kategori
+                  <span style="color: var(--color-error);" aria-hidden="true"> *</span>
+                </label>
+                <select
+                  id="field-category"
+                  class="form-select"
+                  aria-describedby="error-field-category"
+                  aria-required="true"
+                >
+                  <!-- Opsi pertama sebagai placeholder, nilai kosong agar validasi bekerja -->
+                  <option value="">-- Pilih Kategori --</option>
+                  <option value="Hardware">Hardware</option>
+                  <option value="Software">Software</option>
+                  <option value="Network">Network</option>
+                  <option value="Account">Account</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span id="error-field-category" class="field-error" role="alert"></span>
+              </div>
+
+              <!-- Prioritas -->
+              <div class="form-group">
+                <label class="form-label" for="field-priority">
+                  Prioritas
+                  <span style="color: var(--color-error);" aria-hidden="true"> *</span>
+                </label>
+                <select
+                  id="field-priority"
+                  class="form-select"
+                  aria-describedby="error-field-priority"
+                  aria-required="true"
+                >
+                  <option value="">-- Pilih Prioritas --</option>
+                  <option value="Low">Low — Tidak mendesak</option>
+                  <option value="Medium">Medium — Perlu ditangani segera</option>
+                  <option value="High">High — Mengganggu pekerjaan</option>
+                </select>
+                <span id="error-field-priority" class="field-error" role="alert"></span>
+              </div>
+
+            </div><!-- /.form-row -->
+
+            <!-- ------------------------------------------------
+                 TOMBOL AKSI
+                 ------------------------------------------------ -->
+            <div class="form-actions">
+
+              <!-- Tombol kirim tiket -->
+              <button
+                id="btn-submit"
+                type="submit"
+                class="btn btn-primary btn-submit"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+                Kirim Tiket
+              </button>
+
+              <!-- Tombol batal — kembali ke dashboard -->
+              <a href="user-dashboard.html" class="btn btn-secondary btn-cancel">
+                Batal
+              </a>
+
+            </div><!-- /.form-actions -->
+
+          </form><!-- /#ticket-form -->
+
+        </div><!-- /.form-card -->
+
+        <!-- ====================================================
+             PANDUAN PENGISIAN
+             Informasi tambahan untuk membantu user mengisi form
+             ==================================================== -->
+        <div class="form-guide">
+          <div class="info-card" style="margin-top: 20px;">
+            <div class="info-card-header">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8"  x2="12.01" y2="8" />
+              </svg>
+              <span class="info-card-title">Panduan Pengisian</span>
+            </div>
+            <ul class="info-list">
+              <li>
+                <strong>Judul</strong> — Tuliskan ringkasan singkat masalah,
+                minimal 5 karakter.
+              </li>
+              <li>
+                <strong>Deskripsi</strong> — Jelaskan selengkap mungkin:
+                kapan masalah terjadi, apa yang sudah dicoba, dan perangkat apa
+                yang terdampak.
+              </li>
+              <li>
+                <strong>Kategori</strong> — Pilih kategori yang paling sesuai
+                dengan jenis masalah Anda.
+              </li>
+              <li>
+                <strong>Prioritas</strong> — Pilih <em>High</em> jika masalah
+                benar-benar menghambat pekerjaan Anda, <em>Medium</em> jika
+                perlu segera, dan <em>Low</em> jika bisa ditunda.
+              </li>
+            </ul>
+          </div>
+        </div><!-- /.form-guide -->
+
+      </div><!-- /.page-content -->
+    </main><!-- /.main-content -->
+
+  </div><!-- /.dashboard-layout -->
+
+  <!-- ============================================================
+       SCRIPT — urutan wajib dipertahankan
+       utils.js → auth.js → ticket.js
+       ============================================================ -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ticket.js"></script>
+
+  <script>
+    // --------------------------------------------------------
+    // Penghitung karakter real-time untuk field Judul
+    // Ditulis inline agar tidak membebani ticket.js
+    // --------------------------------------------------------
+    (function () {
+      const titleInput  = document.getElementById('field-title');
+      const charCounter = document.getElementById('title-char-count');
+      const MAX = 100;
+
+      if (!titleInput || !charCounter) return;
+
+      titleInput.addEventListener('input', function () {
+        const len = titleInput.value.length;
+        charCounter.textContent = `${len} / ${MAX}`;
+
+        // Warnakan counter jika mendekati/melebihi batas
+        if (len >= MAX) {
+          charCounter.classList.add('over-limit');
+        } else {
+          charCounter.classList.remove('over-limit');
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

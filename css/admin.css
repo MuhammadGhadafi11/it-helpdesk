@@ -1,0 +1,365 @@
+/* ============================================================
+   admin.css
+   Styling tambahan khusus untuk halaman Admin
+   Dimuat setelah style.css dan dashboard.css
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   STAT CARDS — 5 KOLOM (Admin punya 5 kartu: +Closed)
+   Override grid dari dashboard.css agar pas di layar lebar
+   ------------------------------------------------------------ */
+.stat-cards-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+/* Fallback ke 3 kolom di layar medium */
+@media (max-width: 1200px) {
+  .stat-cards-5 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Fallback ke 2 kolom di layar kecil */
+@media (max-width: 768px) {
+  .stat-cards-5 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Stat card angka — ukuran lebih kompak untuk 5 kolom ── */
+.stat-cards-5 .stat-card {
+  padding: 16px 18px;
+}
+
+.stat-cards-5 .stat-number {
+  font-size: 24px;
+}
+
+/* ------------------------------------------------------------
+   LAYOUT DUA KOLOM: tabel terbaru (kiri) + grafik (kanan)
+   ------------------------------------------------------------ */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------
+   CARD UMUM (dipakai untuk tabel + grafik)
+   ------------------------------------------------------------ */
+.admin-card {
+  background-color: var(--color-surface);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-card-header svg {
+  width: 17px;
+  height: 17px;
+  stroke: var(--color-primary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.admin-card-title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Link "Lihat Semua" di pojok kanan header */
+.admin-card-link {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+.admin-card-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------
+   TABEL TIKET TERBARU
+   ------------------------------------------------------------ */
+.recent-table-wrapper {
+  overflow-x: auto;             /* Scroll horizontal jika layar sempit */
+}
+
+.recent-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.recent-table thead tr {
+  background-color: #f8fafc;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.recent-table th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.recent-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s;
+}
+
+.recent-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.recent-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.recent-table td {
+  padding: 12px 16px;
+  vertical-align: middle;
+}
+
+/* Lebar kolom tabel */
+.rcol-id       { width: 90px; }
+.rcol-title    { min-width: 160px; }
+.rcol-user     { width: 120px; }
+.rcol-category { width: 90px; }
+.rcol-priority { width: 80px; }
+.rcol-status   { width: 105px; }
+.rcol-date     { width: 130px; white-space: nowrap; }
+.rcol-action   { width: 110px; text-align: right; }
+
+/* ID tiket monospace */
+.recent-ticket-id {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  padding: 2px 7px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Judul tiket: potong jika terlalu panjang */
+.recent-ticket-title {
+  font-weight: 600;
+  color: var(--color-text);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.recent-ticket-user {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Tombol Lihat Detail di tabel */
+.btn-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--border-radius-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-view:hover {
+  background-color: #dbeafe;
+  color: var(--color-primary-dark);
+}
+
+.btn-view svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ------------------------------------------------------------
+   EMPTY STATE TABEL TERBARU
+   ------------------------------------------------------------ */
+.recent-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.recent-empty svg {
+  width: 44px;
+  height: 44px;
+  stroke: #d1d5db;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 12px;
+}
+
+.recent-empty p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------------------------------------
+   PANEL GRAFIK KATEGORI (Chart.js)
+   ------------------------------------------------------------ */
+.chart-body {
+  padding: 20px;
+}
+
+/* Container canvas Chart.js */
+.chart-container {
+  position: relative;
+  height: 240px;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------
+   RINGKASAN KATEGORI
+   Daftar baris teks: nama kategori + jumlah + bar
+   ------------------------------------------------------------ */
+.category-summary {
+  padding: 0 20px 20px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.category-row:last-child {
+  margin-bottom: 0;
+}
+
+.category-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  width: 72px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+/* Progress bar latar */
+.category-bar-bg {
+  flex: 1;
+  height: 8px;
+  background-color: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* Isi progress bar — lebar di-set via inline style oleh JS */
+.category-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  transition: width 0.4s ease;
+}
+
+.category-count {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------
+   WELCOME BANNER ADMIN
+   Warna berbeda dari user (ungu/indigo) agar mudah dibedakan
+   ------------------------------------------------------------ */
+.admin-welcome {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-welcome-text h2 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.admin-welcome-text p {
+  font-size: var(--font-size-sm);
+  color: #c4b5fd;
+}
+
+.admin-welcome-meta {
+  display: flex;
+  gap: 16px;
+}
+
+.admin-welcome-meta-item {
+  text-align: center;
+}
+
+.admin-welcome-meta-item .meta-number {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-welcome-meta-item .meta-label {
+  font-size: 11px;
+  color: #c4b5fd;
+  margin-top: 2px;
+}

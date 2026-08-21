@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Tiket — IT Helpdesk & Ticketing System</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+
+  <style>
+    /* ============================================================
+       Styling khusus halaman Ticket Detail
+       ============================================================ */
+
+    /* ── Layout dua kolom: detail (kiri) + komentar (kanan) ── */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Card umum ── */
+    .detail-card {
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .detail-card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-card-header svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--color-primary);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .detail-card-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .detail-card-body {
+      padding: 24px;
+    }
+
+    /* ── ID Tiket di topbar ── */
+    .topbar-ticket-id {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-primary);
+      background-color: var(--color-primary-light);
+      padding: 3px 10px;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid #bfdbfe;
+    }
+
+    /* ── Tombol kembali ── */
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      font-family: var(--font-family);
+      color: var(--color-text-muted);
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .btn-back:hover {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .btn-back svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Grid info detail tiket ── */
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .detail-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Label field */
+    .detail-meta-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Nilai field */
+    .detail-meta-value {
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    /* Judul tiket — lebih besar */
+    .detail-ticket-title {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    /* Divider tipis */
+    .detail-divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 20px 0;
+    }
+
+    /* Label bagian deskripsi */
+    .detail-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    /* Teks deskripsi masalah */
+    .detail-description {
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+      line-height: 1.7;
+      white-space: pre-wrap;   /* Pertahankan baris baru dari textarea */
+      word-break: break-word;
+    }
+
+    /* ── Kolom komentar (sticky agar tidak perlu scroll jauh) ── */
+    .comment-column {
+      position: sticky;
+      top: 72px;               /* Sama dengan tinggi topbar */
+    }
+
+    /* ── Header section komentar: judul + hitungan ── */
+    .comment-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── Daftar komentar ── */
+    .comment-list-wrapper {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Scrollbar tipis untuk area komentar */
+    .comment-list-wrapper::-webkit-scrollbar       { width: 4px; }
+    .comment-list-wrapper::-webkit-scrollbar-track  { background: transparent; }
+    .comment-list-wrapper::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 999px; }
+
+    /* ── Satu item komentar ── */
+    .comment-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Komentar dari Admin: border kiri berwarna biru */
+    .comment-item--admin {
+      padding-left: 12px;
+      border-left: 3px solid var(--color-primary);
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Avatar bulat dengan inisial nama */
+    .comment-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+
+    .avatar-admin { background-color: var(--color-primary); }
+    .avatar-user  { background-color: #0ea5e9; }
+
+    .comment-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comment-author {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    /* Badge role di samping nama */
+    .comment-role-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .role-it         { background-color: #dbeafe; color: #1e40af; }
+    .role-user-badge { background-color: #f0fdf4; color: #166534; }
+
+    .comment-time {
+      font-size: 11px;
+      color: var(--color-text-light);
+      margin-left: auto;
+    }
+
+    .comment-body {
+      padding-left: 42px; /* indent sejajar dengan teks setelah avatar */
+    }
+
+    .comment-text {
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* ── Empty state komentar ── */
+    .comment-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+      text-align: center;
+    }
+
+    .comment-empty svg {
+      width: 40px;
+      height: 40px;
+      stroke: #d1d5db;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-bottom: 10px;
+    }
+
+    .comment-empty p {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Form komentar baru ── */
+    .comment-form-wrapper {
+      padding: 16px 24px 20px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .comment-form-label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .comment-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: var(--font-size-sm);
+      font-family: var(--font-family);
+      color: var(--color-text);
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--border-radius);
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.6;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .comment-textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .comment-textarea::placeholder {
+      color: var(--color-text-light);
+    }
+
+    /* Pesan error form komentar */
+    .comment-error {
+      display: none;
+      font-size: var(--font-size-sm);
+      color: var(--color-error);
+      margin-top: 5px;
+      margin-bottom: 8px;
+    }
+
+    .comment-form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    /* ── Halaman error (tiket tidak ditemukan / akses ditolak) ── */
+    .page-error {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      text-align: center;
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .page-error svg {
+      width: 56px;
+      height: 56px;
+      stroke: #fca5a5;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-bottom: 16px;
+    }
+
+    .page-error-title {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 8px;
+    }
+
+    .page-error-msg {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      max-width: 360px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!-- ========================================================
+         SIDEBAR
+         Dua blok navigasi: nav-user dan nav-admin.
+         Salah satunya disembunyikan oleh renderSidebar() di JS
+         berdasarkan role pengguna yang sedang login.
+         ======================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Menu utama">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">IT Helpdesk</span>
+          <span class="sidebar-brand-sub">Ticketing System</span>
+        </div>
+      </div>
+
+      <!-- Info user — diisi oleh renderSidebar() di ticket-detail.js -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">Memuat...</div>
+        <span class="sidebar-user-role" id="sidebar-user-role">User</span>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           MENU USER
+           Ditampilkan jika role = 'user', disembunyikan jika admin.
+           Dikontrol oleh renderSidebar() di ticket-detail.js.
+           ────────────────────────────────────────────────────── -->
+      <nav id="nav-user" class="sidebar-nav" aria-label="Navigasi user">
+        <div class="nav-label">Menu</div>
+
+        <a href="user-dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3"  y="3"  width="7" height="7" rx="1" />
+            <rect x="14" y="3"  width="7" height="7" rx="1" />
+            <rect x="3"  y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <a href="create-ticket.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8"  x2="12" y2="16" />
+            <line x1="8"  y1="12" x2="16" y2="12" />
+          </svg>
+          Buat Tiket
+        </a>
+
+        <!-- Tiket Saya — aktif saat dari halaman my-tickets -->
+        <a href="my-tickets.html" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+          </svg>
+          Tiket Saya
+        </a>
+      </nav>
+
+      <!-- ──────────────────────────────────────────────────────
+           MENU ADMIN
+           Ditampilkan jika role = 'admin', disembunyikan jika user.
+           Dikontrol oleh renderSidebar() di ticket-detail.js.
+           ────────────────────────────────────────────────────── -->
+      <nav id="nav-admin" class="sidebar-nav" aria-label="Navigasi admin" style="display:none;">
+        <div class="nav-label">Menu</div>
+
+        <a href="admin-dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3"  y="3"  width="7" height="7" rx="1" />
+            <rect x="14" y="3"  width="7" height="7" rx="1" />
+            <rect x="3"  y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard Admin
+        </a>
+
+        <a href="manage-tickets.html" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+          </svg>
+          Kelola Tiket
+        </a>
+      </nav>
+
+      <!-- Logout -->
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn-logout" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
+      </div>
+
+    </aside><!-- /.sidebar -->
+
+
+    <!-- ========================================================
+         MAIN CONTENT
+         ======================================================== -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <!-- Tombol kembali — href diubah oleh renderSidebar() sesuai role -->
+          <a id="btn-back" href="my-tickets.html" class="btn-back">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Kembali
+          </a>
+          <div>
+            <div class="topbar-title">Detail Tiket</div>
+            <div class="topbar-subtitle">Informasi lengkap dan riwayat komentar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Konten halaman -->
+      <div class="page-content">
+
+        <!-- ====================================================
+             HALAMAN ERROR
+             Ditampilkan oleh showPageError() jika:
+             - Tiket tidak ditemukan
+             - User mencoba akses tiket orang lain
+             - Parameter URL tidak valid
+             ==================================================== -->
+        <div id="page-error" class="page-error" role="alert">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8"  x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <!-- Teks diisi oleh showPageError() di ticket-detail.js -->
+          <p class="page-error-title" id="page-error-title">Terjadi Kesalahan</p>
+          <p class="page-error-msg"   id="page-error-msg">Silakan kembali ke halaman sebelumnya.</p>
+          <a href="my-tickets.html" class="btn btn-secondary">Kembali ke Tiket Saya</a>
+        </div><!-- /#page-error -->
+
+
+        <!-- ====================================================
+             KONTEN TIKET
+             Disembunyikan oleh showPageError() jika ada error.
+             Semua isinya diisi oleh renderTicketDetail() di JS.
+             ==================================================== -->
+        <div id="ticket-content">
+
+          <!-- Layout dua kolom: detail kiri, komentar kanan -->
+          <div class="detail-layout">
+
+            <!-- ================================================
+                 KOLOM KIRI: Detail Tiket
+                 ================================================ -->
+            <div class="detail-left">
+
+              <!-- Card Detail Utama -->
+              <div class="detail-card">
+                <div class="detail-card-header">
+                  <div class="detail-card-header-left">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <span class="detail-card-title">Informasi Tiket</span>
+                  </div>
+                  <!-- ID tiket — diisi oleh renderTicketDetail() -->
+                  <span class="topbar-ticket-id" id="detail-id">TKT-000</span>
+                </div>
+
+                <div class="detail-card-body">
+
+                  <!-- Judul tiket -->
+                  <!-- Diisi oleh renderTicketDetail() -->
+                  <h2 class="detail-ticket-title" id="detail-title">Memuat...</h2>
+
+                  <!-- Grid 2x3: Status, Prioritas, Kategori, Pembuat, Dibuat, Diperbarui -->
+                  <div class="detail-meta-grid">
+
+                    <div class="detail-meta-item">
+                      <span class="detail-meta-label">Status</span>
+                      <!-- Badge diisi oleh renderTicketDetail() menggunakan innerHTML -->
+                      <span class="detail-meta-value" id="detail-status">—</span>
+                    </div>
+
+                    <div class="detail-meta-item">
+                      <span class="detail-meta-label">Prioritas</span>
+                      <span class="detail-meta-value" id="detail-priority">—</span>
+                    </div>
+
+                    <div class="detail-meta-item">
+                      <span class="detail-meta-label">Kategori</span>
+                      <span class="detail-meta-value" id="detail-category">—</span>
+                    </div>
+
+                    <div class="detail-meta-item">
+                      <span class="detail-meta-label">Dibuat Oleh</span>
+                      <span class="detail-meta-value" id="detail-createdby">—</span>
+                    </div>
+
+                    <div class="detail-meta-item">
+                      <span class="detail-meta-label">Tanggal Dibuat</span>
+                      <span class="detail-meta-value" id="detail-createdat">—</span>
+                    </div>
+
+                    <div class="detail-meta-item">
+                      <span class="detail-meta-label">Terakhir Diperbarui</span>
+                      <span class="detail-meta-value" id="detail-updatedat">—</span>
+                    </div>
+
+                  </div><!-- /.detail-meta-grid -->
+
+                  <hr class="detail-divider" />
+
+                  <!-- Deskripsi masalah -->
+                  <p class="detail-section-label">Deskripsi Masalah</p>
+                  <!-- Diisi oleh renderTicketDetail() -->
+                  <p class="detail-description" id="detail-desc">Memuat deskripsi...</p>
+
+                </div><!-- /.detail-card-body -->
+              </div><!-- /.detail-card -->
+
+            </div><!-- /.detail-left -->
+
+
+            <!-- ================================================
+                 KOLOM KANAN: Komentar
+                 ================================================ -->
+            <div class="comment-column">
+              <div class="detail-card">
+
+                <!-- Header section komentar -->
+                <div class="detail-card-header">
+                  <div class="detail-card-header-left">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5
+                               a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span class="detail-card-title">Komentar</span>
+                  </div>
+                  <!-- Jumlah komentar — diisi oleh renderCommentList() -->
+                  <span class="comment-count-badge" id="comment-count">0</span>
+                </div>
+
+                <!-- ── Daftar komentar ── -->
+                <div class="comment-list-wrapper" id="comment-list" role="log" aria-live="polite" aria-label="Riwayat komentar">
+                  <!-- Baris komentar diisi oleh renderCommentList() di ticket-detail.js -->
+                </div>
+
+                <!-- Empty state komentar — dikontrol oleh renderCommentList() -->
+                <div id="comment-empty" class="comment-empty">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5
+                             a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <p>Belum ada komentar.<br>Jadilah yang pertama berkomentar.</p>
+                </div>
+
+                <!-- ── Form tambah komentar ── -->
+                <div class="comment-form-wrapper">
+                  <form id="comment-form" novalidate>
+                    <label class="comment-form-label" for="comment-input">
+                      Tambah Komentar
+                    </label>
+                    <textarea
+                      id="comment-input"
+                      class="comment-textarea"
+                      placeholder="Tulis komentar atau informasi tambahan di sini..."
+                      maxlength="500"
+                      aria-describedby="comment-error"
+                      aria-required="true"
+                    ></textarea>
+                    <!-- Pesan error — dikontrol oleh handleCommentSubmit() -->
+                    <span id="comment-error" class="comment-error" role="alert"></span>
+                    <div class="comment-form-actions">
+                      <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <line x1="22" y1="2"  x2="11" y2="13" />
+                          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                        Kirim Komentar
+                      </button>
+                    </div>
+                  </form>
+                </div><!-- /.comment-form-wrapper -->
+
+              </div><!-- /.detail-card (komentar) -->
+            </div><!-- /.comment-column -->
+
+          </div><!-- /.detail-layout -->
+
+        </div><!-- /#ticket-content -->
+
+      </div><!-- /.page-content -->
+    </main><!-- /.main-content -->
+
+  </div><!-- /.dashboard-layout -->
+
+  <!-- ============================================================
+       SCRIPT — urutan wajib: utils.js → auth.js → ticket-detail.js
+       ============================================================ -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ticket-detail.js"></script>
+
+</body>
+</html>

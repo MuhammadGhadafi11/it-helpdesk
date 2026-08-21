@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — IT Helpdesk & Ticketing System</title>
+  <!-- Urutan CSS: style.css → dashboard.css → admin.css -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!-- ========================================================
+         SIDEBAR ADMIN
+         Menu: Dashboard, Kelola Tiket, Pengguna, Logout
+         ======================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Menu admin">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">IT Helpdesk</span>
+          <span class="sidebar-brand-sub">Admin Panel</span>
+        </div>
+      </div>
+
+      <!-- Info admin — diisi oleh renderAdminSidebar() -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sidebar-user-name">Memuat...</div>
+        <span class="sidebar-user-role" id="sidebar-user-role">Admin</span>
+      </div>
+
+      <!-- Navigasi Admin -->
+      <nav class="sidebar-nav" aria-label="Menu admin">
+        <div class="nav-label">Menu</div>
+
+        <!-- Dashboard — halaman aktif -->
+        <a href="admin-dashboard.html" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3"  y="3"  width="7" height="7" rx="1" />
+            <rect x="14" y="3"  width="7" height="7" rx="1" />
+            <rect x="3"  y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- Kelola Tiket -->
+        <a href="manage-tickets.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+          </svg>
+          Kelola Tiket
+        </a>
+
+        <!-- Pengguna -->
+        <a href="manage-users.html" class="nav-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Pengguna
+        </a>
+      </nav>
+
+      <!-- Logout -->
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn-logout" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
+      </div>
+
+    </aside><!-- /.sidebar -->
+
+
+    <!-- ========================================================
+         MAIN CONTENT
+         ======================================================== -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">Admin Dashboard</div>
+          <div class="topbar-subtitle">Ringkasan dan statistik semua tiket</div>
+        </div>
+        <a href="manage-tickets.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="9"  y1="13" x2="15" y2="13" />
+            <line x1="9"  y1="17" x2="13" y2="17" />
+          </svg>
+          Kelola Tiket
+        </a>
+      </div>
+
+      <!-- Konten halaman -->
+      <div class="page-content">
+
+        <!-- ====================================================
+             WELCOME BANNER ADMIN
+             Warna ungu/indigo — dibedakan dari welcome banner User
+             Angka diisi oleh renderWelcomeMeta() di admin-dashboard.js
+             ==================================================== -->
+        <div class="admin-welcome">
+          <div class="admin-welcome-text">
+            <h2>Selamat datang, <span id="admin-welcome-name">Admin</span>!</h2>
+            <p>Berikut adalah ringkasan tiket yang masuk hari ini.</p>
+          </div>
+          <!-- Tiga angka cepat: Total, Open, In Progress -->
+          <div class="admin-welcome-meta">
+            <div class="admin-welcome-meta-item">
+              <!-- Diisi oleh renderWelcomeMeta() -->
+              <div class="meta-number" id="welcome-total">0</div>
+              <div class="meta-label">Total</div>
+            </div>
+            <div class="admin-welcome-meta-item">
+              <div class="meta-number" id="welcome-open">0</div>
+              <div class="meta-label">Open</div>
+            </div>
+            <div class="admin-welcome-meta-item">
+              <div class="meta-number" id="welcome-inprogress">0</div>
+              <div class="meta-label">In Progress</div>
+            </div>
+          </div>
+        </div><!-- /.admin-welcome -->
+
+
+        <!-- ====================================================
+             5 STAT CARDS: Total, Open, In Progress, Resolved, Closed
+             Angka diisi oleh renderAdminStatCards() di admin-dashboard.js
+             ==================================================== -->
+        <div class="stat-cards-5" role="region" aria-label="Statistik tiket">
+
+          <!-- Total -->
+          <div class="stat-card total">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number" id="admin-stat-total">0</span>
+              <span class="stat-label">Total Tiket</span>
+            </div>
+          </div>
+
+          <!-- Open -->
+          <div class="stat-card open">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number" id="admin-stat-open">0</span>
+              <span class="stat-label">Open</span>
+            </div>
+          </div>
+
+          <!-- In Progress -->
+          <div class="stat-card inprogress">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number" id="admin-stat-inprogress">0</span>
+              <span class="stat-label">In Progress</span>
+            </div>
+          </div>
+
+          <!-- Resolved -->
+          <div class="stat-card resolved">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number" id="admin-stat-resolved">0</span>
+              <span class="stat-label">Resolved</span>
+            </div>
+          </div>
+
+          <!-- Closed -->
+          <div class="stat-card closed">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9"  x2="9"  y2="15" />
+                <line x1="9"  y1="9"  x2="15" y2="15" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number" id="admin-stat-closed">0</span>
+              <span class="stat-label">Closed</span>
+            </div>
+          </div>
+
+        </div><!-- /.stat-cards-5 -->
+
+
+        <!-- ====================================================
+             LAYOUT DUA KOLOM:
+             Kiri  — Tabel tiket terbaru (maks 5)
+             Kanan — Grafik kategori (Chart.js)
+             ==================================================== -->
+        <div class="dashboard-grid">
+
+          <!-- ──────────────────────────────────────────────────
+               KOLOM KIRI: Tiket Terbaru
+               ────────────────────────────────────────────────── -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-header-left">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span class="admin-card-title">Tiket Terbaru</span>
+              </div>
+              <a href="manage-tickets.html" class="admin-card-link">Lihat Semua →</a>
+            </div>
+
+            <!-- Tabel tiket — dikontrol oleh renderRecentTable() -->
+            <div id="recent-table-wrap" class="recent-table-wrapper">
+              <table class="recent-table" aria-label="Daftar tiket terbaru">
+                <thead>
+                  <tr>
+                    <th class="rcol-id">ID</th>
+                    <th class="rcol-title">Judul</th>
+                    <th class="rcol-user">Pengguna</th>
+                    <th class="rcol-category">Kategori</th>
+                    <th class="rcol-priority">Prioritas</th>
+                    <th class="rcol-status">Status</th>
+                    <th class="rcol-date">Tgl. Dibuat</th>
+                    <th class="rcol-action">Aksi</th>
+                  </tr>
+                </thead>
+                <!-- Baris diisi oleh renderRecentTable() di admin-dashboard.js -->
+                <tbody id="recent-tbody"></tbody>
+              </table>
+            </div>
+
+            <!-- Empty state — ditampilkan jika belum ada tiket sama sekali -->
+            <div id="recent-empty" class="recent-empty" style="display:none;" role="status">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="9"  y1="13" x2="15" y2="13" />
+                <line x1="9"  y1="17" x2="13" y2="17" />
+              </svg>
+              <p>Belum ada tiket yang masuk.</p>
+            </div>
+
+          </div><!-- /.admin-card (tiket terbaru) -->
+
+
+          <!-- ──────────────────────────────────────────────────
+               KOLOM KANAN: Grafik Kategori + Ringkasan
+               ────────────────────────────────────────────────── -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-header-left">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4"  />
+                  <line x1="6"  y1="20" x2="6"  y2="14" />
+                </svg>
+                <span class="admin-card-title">Tiket per Kategori</span>
+              </div>
+            </div>
+
+            <!-- Canvas grafik Doughnut Chart.js -->
+            <!-- Diisi oleh renderCategoryChart() di admin-dashboard.js -->
+            <div class="chart-body">
+              <div class="chart-container">
+                <canvas id="category-chart" aria-label="Grafik tiket per kategori" role="img"></canvas>
+              </div>
+            </div>
+
+            <!-- Ringkasan kategori dengan progress bar -->
+            <!-- Diisi oleh renderCategorySummary() di admin-dashboard.js -->
+            <div class="category-summary" id="category-summary">
+              <!-- Baris kategori diisi oleh JS -->
+            </div>
+
+          </div><!-- /.admin-card (grafik) -->
+
+        </div><!-- /.dashboard-grid -->
+
+      </div><!-- /.page-content -->
+    </main><!-- /.main-content -->
+
+  </div><!-- /.dashboard-layout -->
+
+  <!-- ============================================================
+       SCRIPT
+       Urutan wajib: utils.js → auth.js → Chart.js CDN → admin-dashboard.js
+       Chart.js dimuat sebelum admin-dashboard.js agar objek Chart
+       sudah tersedia saat renderCategoryChart() dipanggil.
+       ============================================================ -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <!-- Chart.js v4 dari CDN (versi stabil) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="../js/admin-dashboard.js"></script>
+
+</body>
+</html>
